@@ -31,6 +31,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   } catch (err) {
 
       console.log(JSON.stringify(err));
+      console.error(err.stack||err)
     return {
       statusCode: 403,
       headers: {
@@ -47,8 +48,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const itemId = uuid.v4()
     const newItem = {
 
-      user: user_id,
-      id: itemId,
+      user_id: user_id,
+      todoId: itemId,
       ...newTodo
     }
     console.log("About to write: " + JSON.stringify(newItem));
@@ -61,7 +62,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify(newItem)
+      body: JSON.stringify({"item":newItem})
     };
 
   } catch (err) {

@@ -15,7 +15,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
   environment:
-    AUTH_0_SECRET:
+    AUTH_0_SECRET: ${ssm:/udacity/todos-auth0-clientkey}
     IMAGES_S3_BUCKET: s3udacitycourse4projimages
     TODOS_TABLE: todosTable
 functions:
@@ -29,6 +29,7 @@ functions:
     events:
       - http:
           method: get
+          cors: true
           path: todos
     iamRoleStatements:
       - Effect: Allow
@@ -49,6 +50,7 @@ functions:
     events:
       - http:
           method: post
+          cors: true
           path: todos
     iamRoleStatements:
       - Effect: Allow
@@ -62,6 +64,7 @@ functions:
     events:
       - http:
           method: patch
+          cors: true
           path: todos/{todoId}
     iamRoleStatements:
       - Effect: Allow
@@ -75,6 +78,7 @@ functions:
     events:
       - http:
           method: delete
+          cors: true
           path: todos/{todoId}
     iamRoleStatements:
       - Effect: Allow
@@ -88,6 +92,7 @@ functions:
     events:
       - http:
           method: post
+          cors: true
           path: todos/{todoId}/attachment
     iamRoleStatements:
       - Effect: Allow
@@ -96,20 +101,24 @@ functions:
           - dynamodb:Scan
           - dynamodb:PutItem
           - dynamodb:DeleteItem
+          - s3:PutObject
    
 
 resources:
   Resources:
-
     TodosDynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: todoId
+            AttributeType: S
+          - AttributeName: user_id
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: user_id
             KeyType: HASH
+          - AttributeName: todoId
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: todosTable
     

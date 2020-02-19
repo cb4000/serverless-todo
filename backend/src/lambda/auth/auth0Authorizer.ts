@@ -2,6 +2,7 @@ import { CustomAuthorizerEvent, CustomAuthorizerResult } from 'aws-lambda'
 import 'source-map-support/register'
 
 import { verify } from 'jsonwebtoken'
+//import {decode} from 'jwt-simple'
 import { createLogger } from '../../utils/logger'
 //import Axios from 'axios'
 //import { Jwt } from '../../auth/Jwt'
@@ -59,9 +60,14 @@ export const handler = async (
 
 export async function verifyToken(raw_token: string): Promise<JwtPayload> {
  let  token:string = getToken(raw_token)
+ let whaaat:string = secretField;
+ ///let secret:Buffer = new Buffer(whaaat, "base64")
   //const jwt: Jwt = decode(token, { complete: true }) as Jwt
-  console.log('about to verify')
-  return verify(token, secretField,{algorithms:['RS256']}) as JwtPayload
+  console.log(secretField+' ~about to verify!! '+ token)
+  var decoded:JwtPayload 
+   decoded = verify(token, whaaat) as JwtPayload
+  console.log(decoded)
+   return decoded
   // TODO: Implement token verification
   
 }

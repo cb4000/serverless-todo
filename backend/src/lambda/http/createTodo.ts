@@ -2,6 +2,7 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
+const imagesBucketName = process.env.IMAGES_S3_BUCKET
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { verifyToken } from '../auth/auth0Authorizer'
 //import { Jwt } from '../../auth/Jwt'
@@ -46,10 +47,13 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     console.log("paylaodstring: " + JSON.stringify(paylaodstring));
     const user_id = paylaodstring.sub;
     const itemId = uuid.v4()
+
+    const key = user_id+"-"+itemId;
     const newItem = {
 
       user_id: user_id,
       todoId: itemId,
+      attachmentUrl: 'https://'+encodeURIComponent(imagesBucketName)+'.s3.amazonaws.com/'+encodeURIComponent(key),
       ...newTodo
     }
     console.log("About to write: " + JSON.stringify(newItem));

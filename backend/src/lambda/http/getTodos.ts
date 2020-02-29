@@ -2,11 +2,13 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 //import { JsonWebTokenError } from 'jsonwebtoken';
+const AWS = require('aws-sdk')
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
 
-const AWS = require('aws-sdk')  
 import { verifyToken } from '../auth/auth0Authorizer'
 import { JwtPayload } from '../../auth/JwtPayload'
-const docClient = new AWS.DynamoDB.DocumentClient()
+const docClient = new XAWS.DynamoDB.DocumentClient()
 //const jwt = require('jsonwebtoken')
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user

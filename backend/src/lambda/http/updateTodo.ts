@@ -6,8 +6,11 @@ import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 
   import { verifyToken } from '../auth/auth0Authorizer'
   import { JwtPayload } from '../../auth/JwtPayload'
-const AWS = require('aws-sdk')  
-const docClient = new AWS.DynamoDB.DocumentClient()
+  const AWS = require('aws-sdk')
+  const AWSXRay = require('aws-xray-sdk')
+  const XAWS = AWSXRay.captureAWS(AWS)
+   
+const docClient = new XAWS.DynamoDB.DocumentClient()
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
   console.log(JSON.stringify(event))

@@ -6,7 +6,10 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } f
 const imagesBucketName = process.env.IMAGES_S3_BUCKET
 //import { SNSEvent, SNSHandler, S3EventRecord } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
+const AWS = require('aws-sdk')
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
+
 //import * as AWSXRay from 'aws-xray-sdk'
 //import Jimp from 'jimp/es'
 
@@ -15,7 +18,7 @@ import { JwtPayload } from '../../auth/JwtPayload'
 //const AWSRay = AWSXRay.captureAWS(AWS)
 
 
-const s3 = new AWS.S3({"signatureVersion":'v4'})
+const s3 = new XAWS.S3({"signatureVersion":'v4'})
 const signedUrlExpireSeconds = 120
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   //const todoId = event.pathParameters.todoId

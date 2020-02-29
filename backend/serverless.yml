@@ -5,10 +5,15 @@ plugins:
   - serverless-webpack
   - serverless-reqvalidator-plugin
   #- serverless-aws-documentation
+  - serverless-plugin-tracing
   - serverless-iam-roles-per-function
   - serverless-dynamodb-local
   - serverless-offline
 provider:
+  tracing:
+    lambda: true
+    apiGateway: true
+
   name: aws
   runtime: nodejs12.x
 
@@ -41,6 +46,8 @@ functions:
           - dynamodb:GetItem
           - dynamodb:Query
           - dynamodb:Scan
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 
@@ -56,6 +63,8 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
@@ -70,6 +79,8 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
@@ -84,6 +95,8 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:DeleteItem
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   # TODO: Configure this function
@@ -102,6 +115,8 @@ functions:
           - dynamodb:PutItem
           - dynamodb:DeleteItem
           - s3:PutObject
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
    
 
 resources:

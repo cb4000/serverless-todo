@@ -8,7 +8,9 @@ import { verifyToken } from '../auth/auth0Authorizer'
 //import { Jwt } from '../../auth/Jwt'
 import { JwtPayload } from '../../auth/JwtPayload'
 const AWS = require('aws-sdk')
-const docClient = new AWS.DynamoDB.DocumentClient()
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
+const docClient = new XAWS.DynamoDB.DocumentClient()
 const todosTable = "todosTable"
 
 //import { verify } from 'jsonwebtoken'
